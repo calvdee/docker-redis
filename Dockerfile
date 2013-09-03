@@ -14,20 +14,12 @@ ENV REDIS_BASE /opt/redis-$REDIS_VERSION
 ADD	http://download.redis.io/releases/redis-$REDIS_VERSION.tar.gz /tmp/
 RUN	cd /tmp && tar -xvf redis-$REDIS_VERSION.tar.gz -C /opt
 RUN cd $REDIS_BASE && make install
+ADD	https://raw.github.com/calvdee/docker-redis/master/supervisord.conf $REDIS_BASE/
 
 # Install supervisor
-RUN sh -c "cat > $REDIS_BASE/supervisord.conf" << EOF
-	[program:redis]
-	directory=$REDIS_BASE
-	command=$REDIS_BASE/src/redis-server redis.conf
-	stdout_logfile=/var/log/supervisor/%(program_name)s.log
-	stderr_logfile=/var/log/supervisor/%(program_name)s_err.log
-	autorestart=true
-	EOF
-
 #RUN easy_install supervisor
 #RUN echo_supervisord_conf > /etc/supervisord.conf
-#RUN printf "[include]\nfiles = /var/www/SupervisorfileE\n" >> /etc/supervisord.conf
+#RUN printf "[include]\nfiles = $REDIS_BASE/supervisord.conf\n" >> /etc/supervisord.conf
 
 
 # Open the port
