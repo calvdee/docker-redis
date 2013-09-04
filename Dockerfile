@@ -6,7 +6,6 @@ RUN	apt-get update
 RUN	apt-get install wget gcc make -y
 RUN apt-get install python-software-properties python python-setuptools -y
 
-
 ENV	REDIS_VERSION 2.6.16
 ENV REDIS_BASE /opt/redis-$REDIS_VERSION
 
@@ -17,10 +16,10 @@ RUN cd $REDIS_BASE && make install
 ADD	https://raw.github.com/calvdee/docker-redis/master/supervisord.conf $REDIS_BASE/
 
 # Install supervisor
-#RUN easy_install supervisor
-#RUN echo_supervisord_conf > /etc/supervisord.conf
-#RUN printf "[include]\nfiles = $REDIS_BASE/supervisord.conf\n" >> /etc/supervisord.conf
-
+RUN	mkdir -p /var/log/supervisor
+RUN easy_install supervisor
 
 # Open the port
 EXPOSE	6379:6379
+
+ENTRYPOINT supervisord -c $REDIS_BASE/supervisord.conf -n
