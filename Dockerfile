@@ -1,5 +1,5 @@
 FROM	ubuntu
-MAINTINER	Calvin De Lima
+MAINTAINER	Calvin De Lima
 
 # Packages
 RUN apt-get update
